@@ -1,0 +1,2 @@
+Make a set to store lines that I always want to skip over
+	-"Seat re-join"
