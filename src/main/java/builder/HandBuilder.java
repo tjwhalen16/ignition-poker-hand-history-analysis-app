@@ -1,13 +1,15 @@
 package builder;
 
+import java.util.List;
+
 import service.model.Hand;
 
 public interface HandBuilder {
 
 	Hand build(String handString);
-	void setPlayers();
+	public int setPlayers(Hand hand, List<String> handStrings, int lineNumber);
 	void setOpen();
 	void setBlinds();
 	void setWinner();
-	void setTime();
+	int setTime(Hand hand, List<String> handStrings, int lineNumber);
 }
