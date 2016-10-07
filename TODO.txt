@@ -1,2 +1,16 @@
 Make a set to store lines that I always want to skip over
 	-"Seat re-join"
+	
+Store hands with their location(their filename, and their location in the file)
+
+Player position as enum?
+
+Possible problems in hand parsing?
+-not all players get cards
+
+
+Keep running pot size while looping through hand?
+
+Make hand checker? Class that determines the best hand given a hand and a board
+
+process strings before going from textFile to string list, remove whitespace? remove lines I don't need?
