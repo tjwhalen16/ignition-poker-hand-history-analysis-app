@@ -1,5 +1,7 @@
 .settings/
 target/
-*.classpath
-*.project
-*.README*
+.classpath
+.project
+.README*
+.springBeans
+.factorypath
