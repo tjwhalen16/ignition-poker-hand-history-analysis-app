@@ -40,7 +40,7 @@ public enum CardFaceEnum {
 	 */
 	public static CardFaceEnum fromString(String face) {
 		for (CardFaceEnum cardFace : values()) {
-			if (face.equalsIgnoreCase(cardFace.toString())) {
+			if (cardFace.toString().equalsIgnoreCase(face)) {
 				return cardFace;
 			}
 		}

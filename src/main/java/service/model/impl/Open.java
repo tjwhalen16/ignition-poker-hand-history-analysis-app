@@ -1,22 +1,58 @@
 package service.model.impl;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class Open {
 	
-	//TODO move somewhere else?
-	public enum Type {
-		RAISE, LIMP, WALK;
-	}
-	
-	private Type type;
+	private OpenTypeEnum type;
 	private int numPlayers;
-	private Player player;
-	private String position; //TODO change to enum?
+	private PositionEnum position; //TODO change to enum?
 	private Cards hand;
-	private double stack; //in BBs
-	private double size; //in BBs
+	private double stackSize; //in BBs
+	private double openSize; //in BBs
 	
 	//fields i'm unsure about
-	private Date date;
+	private Timestamp time;
+	
+	public Open(OpenTypeEnum type, int numPlayers, Player player, double size, Timestamp time) {
+		
+		this.type = type;
+		this.numPlayers = numPlayers;
+		this.position = player.getPosition();
+		this.hand = player.getHand();
+		this.stackSize = player.getStack();
+		this.openSize = size;
+		this.time = time;		
+	}
+
+	public OpenTypeEnum getType() {
+		return type;
+	}
+
+	public int getNumPlayers() {
+		return numPlayers;
+	}
+
+	public PositionEnum getPosition() {
+		return position;
+	}
+
+	public Cards getHand() {
+		return hand;
+	}
+
+	public double getStackSize() {
+		return stackSize;
+	}
+
+	public double getOpenSize() {
+		return openSize;
+	}
+
+	public Timestamp getTime() {
+		return time;
+	}
+	
+	
+	
 }

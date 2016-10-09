@@ -31,7 +31,7 @@ public enum CardSuitEnum {
 	 */
 	public static CardSuitEnum fromString(String suit) {
 		for (CardSuitEnum cardSuit : values()) {
-			if (suit.equalsIgnoreCase(cardSuit.toString())) {
+			if (cardSuit.toString().equalsIgnoreCase(suit)) {
 				return cardSuit;
 			}
 		}

@@ -4,15 +4,14 @@ public class Player {
 
 	private Cards hand;
 	private double stack; //in dollars
-	private String position; //TODO enum
+	private PositionEnum position; //TODO enum
 	
 	
-	public Player(double stack, String position) {
+	public Player(double stack, PositionEnum position) {
 		super();
 		this.stack = stack;
 		this.position = position;
 	}
-
 
 	public Cards getHand() {
 		return hand;
@@ -34,12 +33,12 @@ public class Player {
 	}
 
 
-	public String getPosition() {
+	public PositionEnum getPosition() {
 		return position;
 	}
 
 
-	public void setPosition(String position) {
+	public void setPosition(PositionEnum position) {
 		this.position = position;
 	}
 	
