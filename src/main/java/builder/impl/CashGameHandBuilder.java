@@ -32,7 +32,12 @@ public class CashGameHandBuilder implements HandBuilder {
 		
 	}
 	
-	
+	/**
+	 * Turns a string into a list.
+	 * Breaks the string into list elements by new lines
+	 * @param handString - the string with new line seperated lines
+	 * @return List<String> - list of lines
+	 */
 	private List<String> getHandLinesAsList(String handString) {
 		Scanner handScanner = new Scanner(handString);
 		List<String> handStrings = new ArrayList<String>();
@@ -89,19 +94,11 @@ public class CashGameHandBuilder implements HandBuilder {
 			
 			//Get stack size
 			double stackSize = getLastChipSize(line);
-//			int startOfStackSizeIndex = line.indexOf('$') + 1;
-//			String stackSizeString = line.substring(startOfStackSizeIndex, line.indexOf('i', startOfStackSizeIndex));
-//			double stackSize = Double.parseDouble(stackSizeString);
 			
 			players.add(new Player(stackSize, position));
 			
 			line = handStrings.get(lineNumber++);
 		}
-		
-		//skip currently unused line to get to lines with players' cards
-//		while (! line.contains("HOLE CARDS")) {
-//			line = handStrings.get(lineNumber++);
-//		}
 		
 		//set the blinds
 		lineNumber = setBlinds(hand, handStrings, lineNumber);
