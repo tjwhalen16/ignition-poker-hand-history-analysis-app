@@ -6,12 +6,12 @@ public class Open {
 	
 	private OpenTypeEnum type;
 	private int numPlayers;
-	private PositionEnum position; //TODO change to enum?
+	private PositionEnum position; // TODO change to enum?
 	private Cards hand;
-	private double stackSize; //in BBs
-	private double openSize; //in BBs
+	private double stackSize; // In BBs
+	private double openSize; // In BBs
 	
-	//fields i'm unsure about
+	// fields i'm unsure about
 	private Timestamp time;
 	
 	public Open(OpenTypeEnum type, int numPlayers, Player player, double size, Timestamp time) {

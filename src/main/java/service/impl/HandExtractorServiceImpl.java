@@ -24,27 +24,27 @@ public class HandExtractorServiceImpl implements HandExtractorService {
 		List<Hand> hands = new ArrayList<Hand>();
 		int handCount = 0;
 		StringBuilderWriter handString = new StringBuilderWriter();
-		HandBuilder handBuilder = new CashGameHandBuilder(); //TODO dependency inject this??
+		HandBuilder handBuilder = new CashGameHandBuilder(); // TODO dependency inject this??
 		
 		LineIterator iterator = null;
 		try {
 			iterator = FileUtils.lineIterator(file, "UTF-8");
 			while (iterator.hasNext()) {
 				String line = iterator.nextLine();
-				if (! "".equals(line)) { //line isn't empty
-					if (handString == null) { //TODO handString 2nd line logic is weird, revise
+				if (! "".equals(line)) { // Line isn't empty
+					if (handString == null) { // TODO handString 2nd line logic is weird, revise
 						handString = new StringBuilderWriter();
 					}
 					handString.write(line);
-				} else { //line is empty
-					if (handString != null) { //line is empty for first time
+				} else { // Line is empty
+					if (handString != null) { // Line is empty for first time
 						hands.add(handBuilder.build(handString.toString()));
 						handString.close();
 						handString = null;
 						logger.info("Finished hand {}", ++handCount);
-					} else { //line is empty for the second time (each hand is separated by 2 blank lines)
-						//do nothing
-						//move on to the next line which should have stuff
+					} else { // Line is empty for the second time (each hand is separated by 2 blank lines)
+						// do nothing
+						// Move on to the next line which should have stuff
 					}
 				}
 				

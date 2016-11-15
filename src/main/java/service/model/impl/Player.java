@@ -3,8 +3,8 @@ package service.model.impl;
 public class Player {
 
 	private Cards hand;
-	private double stack; //in dollars
-	private PositionEnum position; //TODO enum
+	private double stack; // In dollars
+	private PositionEnum position; // TODO enum
 	
 	
 	public Player(double stack, PositionEnum position) {

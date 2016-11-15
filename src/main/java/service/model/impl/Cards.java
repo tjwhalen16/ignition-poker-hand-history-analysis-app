@@ -17,12 +17,12 @@ public class Cards {
 	 */
 	public Cards(String[] cards) {
 		
-		//store card 1
+		// Store card 1
 		String card1 = cards[0];
 		face1 = CardFaceEnum.fromString(card1.substring(0, 1));
 		suit1 = CardSuitEnum.fromString(card1.substring(1));
 		
-		//store card 2
+		// Store card 2
 		String card2 = cards[1];
 		face2 = CardFaceEnum.fromString(card2.substring(0, 1));
 		suit2 = CardSuitEnum.fromString(card2.substring(1));
@@ -45,21 +45,21 @@ public class Cards {
 		String hand;
 		
 		if (face1.equals(face2)) {
-			//hand is a pocket pair
+			// hand is a pocket pair
 			hand = face1.toString() + face2.toString();
 		} else {
-			//hand is not paired
-			//put bigger face first
+			// hand is not paired
+			// Put bigger face first
 			if (face1.compareTo(face2) > 0) {
 				hand = face1.toString() + face2.toString();
 			} else {
 				hand = face2.toString() + face1.toString();
 			}
 			
-			//determine if hand is suited
-			if (suit1.equals(suit2)) { //the cards suits match
+			// determine if hand is suited
+			if (suit1.equals(suit2)) { // The cards suits match
 				hand += "s";
-			} else { //the cards suits don't match
+			} else { // The cards suits don't match
 				hand += "o";
 			}
 		}

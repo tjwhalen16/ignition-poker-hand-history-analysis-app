@@ -22,13 +22,12 @@ import service.model.impl.PositionEnum;
  *
  */
 public class CashGameHandBuilderIT {
-	//TODO run tests off of a test file instead of strings?
+	// TODO run tests off of a test file instead of strings?
 	
 	@Test
-	public void testBuildWithNoEdgeCases() {
-		
-		//Make Hand String to build off of
-		String handString = //This is what a hand file look like, newLines explicityly added
+	public void testBuildWithNoEdgeCases() {		
+		// Make Hand String to build off of
+		String handString = // This is what a hand file look like, newLines explicityly added
 				"Ignition Hand #3364065998 TBL#11040389 HOLDEM No Limit - 2016-09-26 20:44:14\n" +
 				"Seat 1: UTG ($6.38 in chips)\n" +
 				"Seat 2: UTG+1 ($4.80 in chips)\n" +
@@ -93,63 +92,63 @@ public class CashGameHandBuilderIT {
 		CashGameHandBuilder builder = new CashGameHandBuilder();
 		Hand hand = builder.build(handString);
 		
-		//Check timestamp
+		// check timestamp
 		Calendar cal = Calendar.getInstance();
 		cal.set(2016, Calendar.SEPTEMBER, 26, 20, 44, 14);
 		cal.set(Calendar.MILLISECOND, 0);
 		assertEquals("Timestamp is correct", cal.getTimeInMillis(), hand.getTime().getTime());
 		
-		//Check players
+		// check players
 		List<Player> players = hand.getPlayers();
 		assertEquals("Player count is correct", 8, players.size());		
-		//Turn list into map for easier testing
+		// Turn list into map for easier testing
 		Map<PositionEnum, Player> positionPlayerMap = new HashMap<PositionEnum, Player>(); 
 		for (Player player : players) {
 			positionPlayerMap.put(player.getPosition(), player);
 		}
 		
-		//Check UTG
+		// check UTG
 		assertTrue(positionPlayerMap.containsKey(PositionEnum.UTG));
 		Player utg = positionPlayerMap.get(PositionEnum.UTG);
 		assertEquals("UTG stacksize is correct", 6.38, utg.getStack(), 0.001);
 		assertEquals("UTG hand is correct", "62o", utg.getHand().toString());
-		//Check UTG+1
+		// check UTG+1
 		assertTrue(positionPlayerMap.containsKey(PositionEnum.UTG1));
 		Player utg1 = positionPlayerMap.get(PositionEnum.UTG1);
 		assertEquals("UTG+1 stacksize is correct", 4.8, utg1.getStack(), 0.001);
 		assertEquals("UTG+1 hand is correct", "A9s", utg1.getHand().toString());
-		//Check UTG+2
+		// check UTG+2
 		assertTrue(positionPlayerMap.containsKey(PositionEnum.UTG2));
 		Player utg2 = positionPlayerMap.get(PositionEnum.UTG2);
 		assertEquals("UTG+2 stacksize is correct", 4.02, utg2.getStack(), 0.001);
 		assertEquals("UTG+2 hand is correct", "K8s", utg2.getHand().toString());
-		//Check UTG+3
+		// check UTG+3
 		assertTrue(positionPlayerMap.containsKey(PositionEnum.UTG3));
 		Player utg3 = positionPlayerMap.get(PositionEnum.UTG3);
 		assertEquals("UTG+3 stacksize is correct", 2.28, utg3.getStack(), 0.001);
 		assertEquals("UTG+3 hand is correct", "63o", utg3.getHand().toString());
-		//Check UTG+4
+		// check UTG+4
 		assertTrue(positionPlayerMap.containsKey(PositionEnum.UTG4));
 		Player utg4 = positionPlayerMap.get(PositionEnum.UTG4);
 		assertEquals("UTG+4 stacksize is correct", 1.74, utg4.getStack(), 0.001);
 		assertEquals("UTG+4 hand is correct", "J8o", utg4.getHand().toString());
-		//Check Dealer
+		// check Dealer
 		assertTrue(positionPlayerMap.containsKey(PositionEnum.BTN));
 		Player dealer = positionPlayerMap.get(PositionEnum.BTN);
 		assertEquals("Dealer stacksize is correct", 4.78, dealer.getStack(), 0.001);
 		assertEquals("Dealer hand is correct", "97s", dealer.getHand().toString());		
-		//Check Small Blind
+		// check Small Blind
 		assertTrue(positionPlayerMap.containsKey(PositionEnum.SB));
 		Player smallBlind = positionPlayerMap.get(PositionEnum.SB);
 		assertEquals("Small Blind stacksize is correct", 1.45, smallBlind.getStack(), 0.001);
 		assertEquals("Small Blind hand is correct", "Q4o", smallBlind.getHand().toString());
-		//Check Big Blind
+		// check Big Blind
 		assertTrue(positionPlayerMap.containsKey(PositionEnum.BB));
 		Player bigBlind = positionPlayerMap.get(PositionEnum.BB);
 		assertEquals("Big Blind stacksize is correct", 5, bigBlind.getStack(), 0.001);
 		assertEquals("Big Blind hand is correct", "A5o", bigBlind.getHand().toString());
 		
-		//Check open
+		// check open
 		Open open = hand.getOpen();
 		assertNotNull(open);
 		assertEquals("Open has correct type", OpenTypeEnum.LIMP, open.getType());
@@ -159,18 +158,14 @@ public class CashGameHandBuilderIT {
 		assertEquals("Open has correct stackSize", 4.80, open.getStackSize(), 0.001);
 		assertEquals("Open has coorect open size", 0.05, open.getOpenSize(), 0.001);
 		
-		//Check blins
+		// check blins
 		Blinds blinds = hand.getBlinds();
 		assertNotNull(blinds);
 		assertEquals("Small Blind is correct", 0.02, blinds.getSmallBlind(), 0.001);
 		assertEquals("Big Blind is correct", 0.05, blinds.getBigBlind(), 0.001);
-		
-		
-		//Not implemented yet
-		assertNull(hand.getWinner());
-		
-		
-
+				
+		// check winner
+		assertEquals(bigBlind, hand.getWinner());
 	}
 
 }
