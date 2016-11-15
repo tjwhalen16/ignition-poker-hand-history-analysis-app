@@ -20,6 +20,7 @@ import service.model.impl.Open;
 import service.model.impl.OpenTypeEnum;
 import service.model.impl.Player;
 import service.model.impl.PositionEnum;
+import util.Utility;
 
 public class CashGameHandBuilder implements HandBuilder {
 	
@@ -27,39 +28,13 @@ public class CashGameHandBuilder implements HandBuilder {
 	
 	public CashGameHandBuilder() {
 		
-	}
-	
-	/**
-	 * Turns a string into a list.
-	 * Breaks the string into list elements by new lines
-	 * @param handString - the string with new line seperated lines
-	 * @return List<String> - list of lines
-	 */
-	private List<String> getHandLinesAsList(String handString) {
-		Scanner handScanner = new Scanner(handString);
-		List<String> handStrings = new ArrayList<String>();
-		String line;
-		
-		while (handScanner.hasNextLine()) {
-			line = handScanner.nextLine();
-			// TODO if line is empty?
-			
-			// If (ignoreLineSet.contains(line)) { TODO
-			//	continue;
-			//}
-			
-			handStrings.add(line);
-		}
-		handScanner.close();
-		return handStrings;
-	}
-	
+	}			
 	
 	@Override
 	public Hand build(String handString) {
 		CashGameHand hand = new CashGameHand();
 		
-		List<String> handStrings = getHandLinesAsList(handString);
+		List<String> handStrings = Utility.getHandLinesAsList(handString);
 		int lineNumber = 0;
 		
 		// Pass hand line
