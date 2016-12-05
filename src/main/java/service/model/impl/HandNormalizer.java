@@ -2,6 +2,7 @@ package service.model.impl;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -20,8 +21,9 @@ public class HandNormalizer {
 	 * Long, nasty, and neccessary function that walks through hand and logs times when the next 
 	 * line isn't what it should be.
 	 */
-	public static void logDifferences(List<String> lines) {
+	public static String findDeviationsFromMinimalCorrectHand(List<String> lines) {
 		int lineNumber = 0;
+		StringBuilder deviations = new StringBuilder();
 		String line = lines.get(lineNumber++);
 		
 		assertTrue(line.contains("Ignition Hand #"));
@@ -31,7 +33,7 @@ public class HandNormalizer {
 		line = lines.get(lineNumber++); // Move past first line
 		while (!line.contains("Set dealer")) {			
 			if (!line.contains("Seat ")) {
-				logger.warn("Before set dealer: {}", line);
+				append(deviations, "Before set dealer: ", line, "\n");
 			} else {
 				numSeats++;
 			}
@@ -40,24 +42,24 @@ public class HandNormalizer {
 		
 		line = lines.get(lineNumber++); // Move past "Set dealer" line
 		if (!line.contains("Small Blind")) {
-			logger.warn("Before hole cards: {}", line);
+			append(deviations, "Before hole cards: ", line, "\n");
 		}
 		
 		line = lines.get(lineNumber++); // Move past "Small Blind" line
 		if (!line.contains("Big Blind")) {
-			logger.warn("Before hole cards: {}", line);
+			append(deviations, "Before hole cards: ", line, "\n");
 		}
 		
 		line = lines.get(lineNumber++); // Move past "Big Blind" line
 		if (!line.contains("* HOLE CARDS *")) {
-			logger.warn("Before hole cards: {}", line);
+			append(deviations, "Before hole cards: ", line, "\n");
 		}
 		
 		int numDealt = 0;
 		line = lines.get(lineNumber++); // Move past "* HOLE CARDS *" line
 		while (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises"))) {
 			if (!line.contains("Card dealt to a spot")) {
-				logger.warn("Before pre-flop action: {}", line);
+				append(deviations, "Before pre-flop action: ", line, "\n");
 			} else {
 				numDealt++;
 			}
@@ -65,12 +67,12 @@ public class HandNormalizer {
 		}
 		
 		if (numSeats != numDealt) {
-			logger.warn("Players and cards dealt are not equal");
+			append(deviations, "Players and cards dealt are not equal");
 		}
 		
 		while (!line.contains("* FLOP *")) {
 			if (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises") || line.contains("Checks") || line.contains("Bets"))) {
-				logger.warn("Before flop: {}", line);
+				append(deviations, "Before flop: ", line, "\n");
 			}
 			line = lines.get(lineNumber++);
 		}
@@ -78,7 +80,7 @@ public class HandNormalizer {
 		line = lines.get(lineNumber++); // Move past "* FLOP *" line
 		while (!line.contains("* TURN *")) {
 			if (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises") || line.contains("Checks") || line.contains("Bets"))) {
-				logger.warn("Before turn: {}", line);
+				append(deviations, "Before turn: ", line, "\n");
 			}
 			line = lines.get(lineNumber++);
 		}
@@ -86,15 +88,16 @@ public class HandNormalizer {
 		line = lines.get(lineNumber++); // Move past "* TURN *" line
 		while (!line.contains("* RIVER *")) {
 			if (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises") || line.contains("Checks") || line.contains("Bets"))) {
-				logger.warn("Before river: {}", line);
+				append(deviations, "Before river: ", line, "\n");
 			}
 			line = lines.get(lineNumber++);
 		}
 		
 		line = lines.get(lineNumber++); // Move past "* RIVER *" line
 		while (!line.contains("* SUMMARY *")) {
-			if (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises") || line.contains("Checks") || line.contains("Bets"))) {
-				logger.warn("Before summary: {}", line);
+			if (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises") || line.contains("Checks") || line.contains("Bets")) &&
+				!(line.contains("uncalled") || line.contains("Does not show") || line.contains("Hand result"))) {
+				append(deviations, "Before summary: ", line, "\n");
 			}
 			line = lines.get(lineNumber++);
 		}
@@ -102,23 +105,29 @@ public class HandNormalizer {
 		line = lines.get(lineNumber++); // Move past "* SUMMARY *" line
 		
 		if (!line.contains("Total Pot")) {
-			logger.warn("Before EOF: {}", line);
+			append(deviations, "Before EOF: ", line, "\n");
 		}
 		line = lines.get(lineNumber++); // Move past "Total Pot" line
 		
 		if (!line.contains("Board ")) {
-			logger.warn("Before EOF: {}", line);
+			append(deviations, "Before EOF: ", line, "\n");
 		}
 		line = lines.get(lineNumber++); // Move past "Board " line
 		
 		for (int i = lineNumber; i < lines.size(); line = lines.get(i++)) {
 			if (!line.contains("Seat+")) {
-				logger.warn("Before EOF: {}", line);
+				append(deviations, "Before EOF: ", line, "\n");
 			}
 		}
+		return deviations.toString();
 	}
 	
 	public static List<String> normalize(List<String> lines) {
 		return null; // TODO implement
+	}
+	
+	private static void append(StringBuilder builder, String... toAppend) {
+		Arrays.stream(toAppend)
+			.forEach(str -> builder.append(str));
 	}
 }

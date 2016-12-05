@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
@@ -20,11 +21,10 @@ public class HandExtractorServiceImpl implements HandExtractorService {
 
 	private final static Logger logger = LoggerFactory.getLogger(HandExtractorServiceImpl.class);
 	
-	public List<Hand> getAllHandsFromFile(File file) {
-		List<Hand> hands = new ArrayList<Hand>();
+	public List<String> getAllHandStringsFromFile(File file) {
+		List<String> hands = new ArrayList<String>();
 		int handCount = 0;
 		StringBuilderWriter handString = new StringBuilderWriter();
-		HandBuilder handBuilder = new CashGameHandBuilder(); // TODO dependency inject this??
 		
 		LineIterator iterator = null;
 		try {
@@ -32,18 +32,17 @@ public class HandExtractorServiceImpl implements HandExtractorService {
 			while (iterator.hasNext()) {
 				String line = iterator.nextLine();
 				if (! "".equals(line)) { // Line isn't empty
-					if (handString == null) { // TODO handString 2nd line logic is weird, revise
+					if (handString == null) { // TODO handString 2nd line logic is weird, refactor
 						handString = new StringBuilderWriter();
 					}
 					handString.write(line);
 				} else { // Line is empty
 					if (handString != null) { // Line is empty for first time
-						hands.add(handBuilder.build(handString.toString()));
+						hands.add(handString.toString());
 						handString.close();
 						handString = null;
-						logger.info("Finished hand {}", ++handCount);
+						handCount++;
 					} else { // Line is empty for the second time (each hand is separated by 2 blank lines)
-						// do nothing
 						// Move on to the next line which should have stuff
 					}
 				}
@@ -54,8 +53,17 @@ public class HandExtractorServiceImpl implements HandExtractorService {
 		} finally {
 			LineIterator.closeQuietly(iterator);
 		}
-		
+		logger.info("Found {} hands", handCount);
 		return hands;
+	}
+	
+	// TODO this method hold code refactored from getAllHandStringsFromFile which was doing too much
+	private List<Hand> buildHands(List<String> handStrings) {
+		List<Hand> hands = new ArrayList<Hand>();
+		HandBuilder handBuilder = new CashGameHandBuilder(); // TODO dependency inject this??
+		return handStrings.stream()
+				.map( handString -> handBuilder.build(handString))
+				.collect(Collectors.toList());
 	}
 
 }

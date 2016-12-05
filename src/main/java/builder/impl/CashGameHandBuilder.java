@@ -32,11 +32,9 @@ public class CashGameHandBuilder implements HandBuilder {
 	
 	@Override
 	public Hand build(String handString) {
-		CashGameHand hand = new CashGameHand();
-		
+		CashGameHand hand = new CashGameHand();		
 		List<String> handStrings = Utility.getHandLinesAsList(handString);
-		int lineNumber = 0;
-		
+		int lineNumber = 0;		
 		// Pass hand line
 		lineNumber = setTime(hand, handStrings, lineNumber);		
 		// Pass lines the function setPlayers needs
