@@ -4,9 +4,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
+import static java.util.stream.Collectors.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import util.Constants;
 
 /**
  * Normalizes all hands to a common/basic input that the handBuilder expects.
@@ -20,6 +23,11 @@ public class HandNormalizer {
 	/*
 	 * Long, nasty, and neccessary function that walks through hand and logs times when the next 
 	 * line isn't what it should be.
+	 * 
+	 * TODO refactor
+	 * for each line
+	 *    make decision based on state
+	 *    update state (states: ... preFlop, preTurn, preRiver, postSummary, ...)
 	 */
 	public static String findDeviationsFromMinimalCorrectHand(List<String> lines) {
 		int lineNumber = 0;
@@ -27,6 +35,7 @@ public class HandNormalizer {
 		String line = lines.get(lineNumber++);
 		
 		assertTrue(line.contains("Ignition Hand #"));
+		String handInfo = line;
 		logger.info("Normalizing hand: {}", line);
 		
 		int numSeats = 0;
@@ -57,7 +66,7 @@ public class HandNormalizer {
 		
 		int numDealt = 0;
 		line = lines.get(lineNumber++); // Move past "* HOLE CARDS *" line
-		while (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises"))) {
+		while (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises") || line.contains("All-in"))) {
 			if (!line.contains("Card dealt to a spot")) {
 				append(deviations, "Before pre-flop action: ", line, "\n");
 			} else {
@@ -70,32 +79,37 @@ public class HandNormalizer {
 			append(deviations, "Players and cards dealt are not equal");
 		}
 		
-		while (!line.contains("* FLOP *")) {
-			if (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises") || line.contains("Checks") || line.contains("Bets"))) {
+		while (!line.contains("* FLOP *") && !line.contains("* SUMMARY *")) {
+			if (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises") || line.contains("All-in") || line.contains("Checks") || line.contains("Bets"))) {
 				append(deviations, "Before flop: ", line, "\n");
 			}
 			line = lines.get(lineNumber++);
 		}
-		
-		line = lines.get(lineNumber++); // Move past "* FLOP *" line
-		while (!line.contains("* TURN *")) {
-			if (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises") || line.contains("Checks") || line.contains("Bets"))) {
+		if (!line.contains("* SUMMARY *")) {
+			line = lines.get(lineNumber++); // Move past "* FLOP *" line
+		}
+		while (!line.contains("* TURN *") && !line.contains("* SUMMARY *")) {
+			if (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises") || line.contains("All-in") || line.contains("Checks") || line.contains("Bets"))) {
 				append(deviations, "Before turn: ", line, "\n");
 			}
 			line = lines.get(lineNumber++);
 		}
 		
-		line = lines.get(lineNumber++); // Move past "* TURN *" line
-		while (!line.contains("* RIVER *")) {
-			if (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises") || line.contains("Checks") || line.contains("Bets"))) {
+		if (!line.contains("* SUMMARY *")) {
+			line = lines.get(lineNumber++); // Move past "* TURN *" line
+		}
+		while (!line.contains("* RIVER *") && !line.contains("* SUMMARY *")) {
+			if (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises") || line.contains("All-in") || line.contains("Checks") || line.contains("Bets"))) {
 				append(deviations, "Before river: ", line, "\n");
 			}
 			line = lines.get(lineNumber++);
 		}
 		
-		line = lines.get(lineNumber++); // Move past "* RIVER *" line
+		if (!line.contains("* SUMMARY *")) {
+			line = lines.get(lineNumber++); // Move past "* RIVER *" line
+		}
 		while (!line.contains("* SUMMARY *")) {
-			if (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises") || line.contains("Checks") || line.contains("Bets")) &&
+			if (!(line.contains("Folds") || line.contains("Calls") || line.contains("Raises") || line.contains("All-in") || line.contains("Checks") || line.contains("Bets")) &&
 				!(line.contains("uncalled") || line.contains("Does not show") || line.contains("Hand result"))) {
 				append(deviations, "Before summary: ", line, "\n");
 			}
@@ -119,11 +133,18 @@ public class HandNormalizer {
 				append(deviations, "Before EOF: ", line, "\n");
 			}
 		}
-		return deviations.toString();
+		
+		if ("".equals(deviations.toString())) {
+			return deviations.toString();
+		} else {
+			return handInfo + '\n' + deviations.toString();
+		}
 	}
 	
 	public static List<String> normalize(List<String> lines) {
-		return null; // TODO implement
+		return lines.stream()
+					.filter(line -> !Constants.linesToSkip.contains(line))
+					.collect(toList());
 	}
 	
 	private static void append(StringBuilder builder, String... toAppend) {

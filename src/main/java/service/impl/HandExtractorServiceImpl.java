@@ -35,10 +35,10 @@ public class HandExtractorServiceImpl implements HandExtractorService {
 					if (handString == null) { // TODO handString 2nd line logic is weird, refactor
 						handString = new StringBuilderWriter();
 					}
-					handString.write(line);
+					handString.append(line).append('\n');
 				} else { // Line is empty
 					if (handString != null) { // Line is empty for first time
-						hands.add(handString.toString());
+						hands.add(handString.append('\n').toString());
 						handString.close();
 						handString = null;
 						handCount++;

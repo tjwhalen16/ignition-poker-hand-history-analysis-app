@@ -2,16 +2,41 @@ package model.impl;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import static java.util.stream.Collectors.*;
 
 import org.junit.Test;
+import org.springframework.util.ResourceUtils;
 
+import builder.HandBuilder;
+import builder.impl.CashGameHandBuilder;
+import service.impl.HandExtractorServiceImpl;
 import service.model.impl.HandNormalizer;
 import util.Utility;
 
 public class HandNormalizerIT {
 
 	@Test
+	public void testNormalizingHandsFromFile() {
+		File file;
+		try {
+			file = ResourceUtils.getFile(this.getClass().getResource("/HH20160930-224100 - 4754389 - RING - $0.02-$0.05 - HOLDEM - NL - TBL No.11049214.txt"));
+			HandExtractorServiceImpl handExtractor = new HandExtractorServiceImpl();
+			List<String> handStrings = handExtractor.getAllHandStringsFromFile(file);
+			HandBuilder builder = new CashGameHandBuilder();
+			System.out.println(handStrings.stream()
+					   .map(Utility::getHandLinesAsList)
+					   .map(HandNormalizer::normalize)
+					   .map(HandNormalizer::findDeviationsFromMinimalCorrectHand)
+					   .collect(joining("\n")));
+		} catch (IOException e) {
+			System.out.println("Can't find file in resource folder\n");
+		}
+	}
+	
+	//@Test
 	public void testNoDeviations() {
 		// Make Hand String to build off of
 		String handString = // This is what a hand file look like, newLines explicityly added
@@ -74,14 +99,13 @@ public class HandNormalizerIT {
 				"Seat+5: UTG+4 Folded on the TURN\n" + 
 				"Seat+7: Dealer Folded on the TURN\n" + 
 				"Seat+8: Small Blind Folded before the FLOP\n" + 
-				"Seat+9: Big Blind $0.88 [Does not show]\n";
-		
+				"Seat+9: Big Blind $0.88 [Does not show]\n";		
 		List<String> lines = Utility.getHandLinesAsList(handString);
 		String deviations = HandNormalizer.findDeviationsFromMinimalCorrectHand(lines);		
 		assertEquals("", deviations);
 	}
 	
-	@Test
+	//@Test
 	public void testAdditionalLines() {
 		// Make Hand String to build off of
 		String handString = // This is what a hand file look like, newLines explicityly added
@@ -148,8 +172,7 @@ public class HandNormalizerIT {
 				"Seat+5: UTG+4 Folded on the TURN\n" + 
 				"Seat+7: Dealer Folded on the TURN\n" + 
 				"Seat+8: Small Blind Folded before the FLOP\n" + 
-				"Seat+9: Big Blind $0.88 [Does not show]\n";
-		
+				"Seat+9: Big Blind $0.88 [Does not show]\n";		
 		List<String> lines = Utility.getHandLinesAsList(handString);
 		String deviations = HandNormalizer.findDeviationsFromMinimalCorrectHand(lines);
 		assertTrue(deviations.contains("Additional line 1\n"));
@@ -158,7 +181,7 @@ public class HandNormalizerIT {
 		assertTrue(deviations.contains("Additional line 4\n"));
 	}
 	
-	@Test
+	//@Test
 	public void testPlayerCountDifference() {
 		// Make Hand String to build off of
 		String handString = // This is what a hand file look like, newLines explicityly added
@@ -220,8 +243,7 @@ public class HandNormalizerIT {
 				"Seat+5: UTG+4 Folded on the TURN\n" + 
 				"Seat+7: Dealer Folded on the TURN\n" + 
 				"Seat+8: Small Blind Folded before the FLOP\n" + 
-				"Seat+9: Big Blind $0.88 [Does not show]\n";
-		
+				"Seat+9: Big Blind $0.88 [Does not show]\n";		
 		List<String> lines = Utility.getHandLinesAsList(handString);
 		String deviations = HandNormalizer.findDeviationsFromMinimalCorrectHand(lines);
 		assertTrue(deviations.contains("Players and cards dealt are not equal"));

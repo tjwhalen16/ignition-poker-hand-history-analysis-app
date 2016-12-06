@@ -5,7 +5,6 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +21,8 @@ import service.model.impl.Player;
 import service.model.impl.PositionEnum;
 import util.Utility;
 
-public class CashGameHandBuilder implements HandBuilder {
-	
-	private static final Logger logger = LoggerFactory.getLogger(CashGameHandBuilder.class);
-	
-	public CashGameHandBuilder() {
-		
-	}			
+public class CashGameHandBuilder implements HandBuilder {	
+	private static final Logger logger = LoggerFactory.getLogger(CashGameHandBuilder.class);			
 	
 	@Override
 	public Hand build(String handString) {
@@ -42,8 +36,7 @@ public class CashGameHandBuilder implements HandBuilder {
 		// Pass lines the function setOpen needs to find open
 		lineNumber = setOpen(hand, handStrings, lineNumber);
 		// Set the winner
-		setWinner(hand, handStrings, lineNumber);
-		
+		setWinner(hand, handStrings, lineNumber);		
 		return hand;
 	}
 	
