@@ -54,12 +54,11 @@ public class CashGameHandBuilder implements HandBuilder {
 			
 			players.add(new Player(stackSize, position));			
 			line = handStrings.get(lineNumber++);
-		}		
+		}	
 		// Set the blinds
 		lineNumber = setBlinds(hand, handStrings, lineNumber);
-		
 		// get each players' cards
-		line = handStrings.get(lineNumber++);
+		line = handStrings.get(lineNumber);
 		while (line.contains("dealt")) { // capturing lines that look like "UTG : Card dealt to a spot [2s 6c]"
 			// get position where cards were dealt
 			PositionEnum position = getPosition(line, 0, ':');			
@@ -76,10 +75,10 @@ public class CashGameHandBuilder implements HandBuilder {
 					break; // break on found
 				}
 			}			
-			line = handStrings.get(lineNumber++);
-		}		
+			line = handStrings.get(++lineNumber);
+		}
 		hand.setPlayers(players);		
-		return lineNumber;
+		return lineNumber; // While loop above goes 1 line too far
 	}
 	
 	/**

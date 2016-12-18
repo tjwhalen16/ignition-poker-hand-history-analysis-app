@@ -1,14 +1,20 @@
 package builder.impl;
 
+import static java.util.stream.Collectors.*;
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+import org.springframework.util.ResourceUtils;
 
+import builder.HandBuilder;
+import service.impl.HandExtractorServiceImpl;
 import service.model.Blinds;
 import service.model.Hand;
 import service.model.impl.Open;
@@ -22,7 +28,25 @@ import service.model.impl.PositionEnum;
  *
  */
 public class CashGameHandBuilderIT {
-	// TODO run tests off of a test file instead of strings?
+	@Test
+	public void testGettingOpensFromFile() {
+		File file;
+		try {
+			file = ResourceUtils.getFile(this.getClass().getResource("/HH20160930-224100 - 4754389 - RING - $0.02-$0.05 - HOLDEM - NL - TBL No.11049214.txt"));
+			HandExtractorServiceImpl handExtractor = new HandExtractorServiceImpl();
+			List<String> handStrings = handExtractor.getAllHandStringsFromFile(file);
+			HandBuilder builder = new CashGameHandBuilder();
+			List<Open> opens = handStrings.stream()
+					   .map(builder::build)
+					   .map(Hand::getOpen)
+					   .collect(toList());
+			assertEquals("There should be 33 opens, I counted", 33, opens.size());			
+			opens.forEach(System.out::println);
+		} catch (IOException e) {
+			System.out.println("Can't find file in resource folder\n");
+		}
+	}
+	
 	
 	@Test
 	public void testBuildWithNoEdgeCases() {		

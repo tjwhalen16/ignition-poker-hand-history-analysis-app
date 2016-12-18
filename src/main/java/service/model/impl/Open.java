@@ -23,6 +23,12 @@ public class Open {
 		this.stackSize = player.getStack();
 		this.openSize = size;
 		this.time = time;		
+	}	
+	
+	@Override
+	public String toString() {
+		return "Open [type=" + type + ", numPlayers=" + numPlayers + ", position=" + position + ", hand=" + hand
+				+ ", stackSize=" + stackSize + ", openSize=" + openSize + ", time=" + time + "]";
 	}
 
 	public OpenTypeEnum getType() {
