@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import builder.HandBuilder;
 import service.model.Blinds;
 import service.model.Hand;
-import service.model.impl.Cards;
+import service.model.impl.HoleCards;
 import service.model.impl.CashGameBlinds;
 import service.model.impl.CashGameHand;
 import service.model.impl.Open;

@@ -8,7 +8,7 @@ import java.util.List;
 
 import service.model.Blinds;
 import service.model.Hand;
-import service.model.impl.Cards;
+import service.model.impl.HoleCards;
 import service.model.impl.CashGameBlinds;
 import service.model.impl.Player;
 import service.model.impl.PositionEnum;
@@ -74,7 +74,7 @@ public interface HandBuilder {
 			// Loop through players to find the player with the correct position
 			for (Player player : players) {
 				if (position.equals(player.getPosition())) {
-					player.setHand(new Cards(cards));
+					player.setHand(new HoleCards(cards));
 					break; // break on found
 				}
 			}			

@@ -5,9 +5,9 @@ package service.model.impl;
  * @author Tyler
  *
  */
-public class Cards {
-	private CardFaceEnum face1, face2;
-	private CardSuitEnum suit1, suit2;
+public class HoleCards {
+	private Card card1;
+	private Card card2;
 	private final String hand;
 	
 	/**
@@ -15,20 +15,10 @@ public class Cards {
 	 * @param cards - array of size 2
 	 * i.e. {2c, As}
 	 */
-	public Cards(String[] cards) {
-		
-		// Store card 1
-		String card1 = cards[0];
-		face1 = CardFaceEnum.fromString(card1.substring(0, 1));
-		suit1 = CardSuitEnum.fromString(card1.substring(1));
-		
-		// Store card 2
-		String card2 = cards[1];
-		face2 = CardFaceEnum.fromString(card2.substring(0, 1));
-		suit2 = CardSuitEnum.fromString(card2.substring(1));
-		
-		hand = setHandStringUsingFields();
-		
+	public HoleCards(String[] cards) {
+		this.card1 = new Card(cards[0]);
+		this.card2 = new Card(cards[1]);		
+		hand = setHandStringUsingFields();		
 	}
 		
 	/**
@@ -44,20 +34,20 @@ public class Cards {
 	private String setHandStringUsingFields() {
 		String hand;
 		
-		if (face1.equals(face2)) {
+		if (card1.getFace().equals(card2.getFace())) {
 			// hand is a pocket pair
-			hand = face1.toString() + face2.toString();
+			hand = card1.getFace().toString() + card2.getFace().toString();
 		} else {
 			// hand is not paired
 			// Put bigger face first
-			if (face1.compareTo(face2) > 0) {
-				hand = face1.toString() + face2.toString();
+			if (card1.getFace().compareTo(card2.getFace()) > 0) {
+				hand = card1.getFace().toString() + card2.getFace().toString();
 			} else {
-				hand = face2.toString() + face1.toString();
+				hand = card2.getFace().toString() + card1.getFace().toString();
 			}
 			
 			// determine if hand is suited
-			if (suit1.equals(suit2)) { // The cards suits match
+			if (card1.getSuit().equals(card2.getSuit())) { // The cards suits match
 				hand += "s";
 			} else { // The cards suits don't match
 				hand += "o";

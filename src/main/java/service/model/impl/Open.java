@@ -11,8 +11,7 @@ public class Open {
 	// fields i'm unsure about
 	private Timestamp time;
 	
-	public Open(OpenTypeEnum type, int numPlayers, Player player, double size, Timestamp time) {
-		
+	public Open(OpenTypeEnum type, int numPlayers, Player player, double size, Timestamp time) {		
 		this.type = type;
 		this.numPlayers = numPlayers;
 		this.player = player;
@@ -38,7 +37,7 @@ public class Open {
 		return player.getPosition();
 	}
 
-	public Cards getHand() {
+	public HoleCards getHand() {
 		return player.getHand();
 	}
 
