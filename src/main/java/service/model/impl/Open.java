@@ -3,12 +3,9 @@ package service.model.impl;
 import java.sql.Timestamp;
 
 public class Open {
-	
+	private Player player;
 	private OpenTypeEnum type;
 	private int numPlayers;
-	private PositionEnum position; // TODO change to enum?
-	private Cards hand;
-	private double stackSize; // In BBs
 	private double openSize; // In BBs
 	
 	// fields i'm unsure about
@@ -18,17 +15,15 @@ public class Open {
 		
 		this.type = type;
 		this.numPlayers = numPlayers;
-		this.position = player.getPosition();
-		this.hand = player.getHand();
-		this.stackSize = player.getStack();
+		this.player = player;
 		this.openSize = size;
 		this.time = time;		
 	}	
 	
 	@Override
 	public String toString() {
-		return "Open [type=" + type + ", numPlayers=" + numPlayers + ", position=" + position + ", hand=" + hand
-				+ ", stackSize=" + stackSize + ", openSize=" + openSize + ", time=" + time + "]";
+		return "Open [type=" + type + ", numPlayers=" + numPlayers + ", position=" + player.getPosition() + ", hand=" + player.getHand()
+				+ ", stackSize=" + player.getStack() + ", openSize=" + openSize + ", time=" + time + "]";
 	}
 
 	public OpenTypeEnum getType() {
@@ -40,15 +35,15 @@ public class Open {
 	}
 
 	public PositionEnum getPosition() {
-		return position;
+		return player.getPosition();
 	}
 
 	public Cards getHand() {
-		return hand;
+		return player.getHand();
 	}
 
 	public double getStackSize() {
-		return stackSize;
+		return player.getStack();
 	}
 
 	public double getOpenSize() {
@@ -57,8 +52,5 @@ public class Open {
 
 	public Timestamp getTime() {
 		return time;
-	}
-	
-	
-	
+	}	
 }
