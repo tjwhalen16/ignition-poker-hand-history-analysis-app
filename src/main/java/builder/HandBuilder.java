@@ -1,21 +1,56 @@
 package builder;
 
+import java.sql.Timestamp;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import service.model.Blinds;
 import service.model.Hand;
 import service.model.impl.Cards;
+import service.model.impl.CashGameBlinds;
 import service.model.impl.Player;
 import service.model.impl.PositionEnum;
 
 public interface HandBuilder {
 	Hand build(String handString);
-	public int setOpen(Hand hand, List<String> handStrings, int lineNumber);
-	public int setBlinds(Hand hand, List<String> handStrings, int lineNumber);
-	public void setWinner(Hand hand, List<String> handStrings, int lineNumber);
-	public int setTime(Hand hand, List<String> handStrings, int lineNumber);
 	
-	public default int setPlayers(Hand hand, List<String> handStrings, int lineNumber) {
+	default int setBlinds(Hand hand, List<String> handStrings, int lineNumber) {
+		double smallBlind = 0.0;
+		double bigBlind = 0.0;
+		
+		String line = handStrings.get(lineNumber++);
+		while (! line.contains("HOLE CARDS")) {
+			
+			if (line.contains("Small Blind")) {
+				smallBlind = getLastChipSize(line);
+			}
+			
+			if (line.contains("Big Blind")) {
+				bigBlind = getLastChipSize(line);
+			}
+			
+			line = handStrings.get(lineNumber++);
+		}
+		
+		Blinds blinds = new CashGameBlinds(smallBlind, bigBlind);
+		hand.setBlinds(blinds);
+		
+		return lineNumber;		
+	}
+	
+	default int setTime(Hand hand, List<String> handStrings, int lineNumber) {
+		String line = handStrings.get(lineNumber++);
+		int dateStartPosition = line.indexOf('-') + 2;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Timestamp time = new Timestamp(dateFormat.parse(line, new ParsePosition(dateStartPosition)).getTime());
+		hand.setTime(time);
+		
+		return lineNumber;		
+	}
+	
+	default int setPlayers(Hand hand, List<String> handStrings, int lineNumber) {
 		List<Player> players = new ArrayList<Player>();
 		
 		// get players positions and stack size
