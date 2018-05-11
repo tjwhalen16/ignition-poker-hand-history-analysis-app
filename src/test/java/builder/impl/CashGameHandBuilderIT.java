@@ -182,7 +182,7 @@ public class CashGameHandBuilderIT {
 		assertEquals("Open has correct stackSize", 4.80, open.getStackSize(), 0.001);
 		assertEquals("Open has coorect open size", 0.05, open.getOpenSize(), 0.001);
 		
-		// check blins
+		// check blinds
 		Blinds blinds = hand.getBlinds();
 		assertNotNull(blinds);
 		assertEquals("Small Blind is correct", 0.02, blinds.getSmallBlind(), 0.001);
