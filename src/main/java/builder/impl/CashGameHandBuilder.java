@@ -35,7 +35,6 @@ public class CashGameHandBuilder implements HandBuilder {
 		lineNumber = setPlayers(hand, handStrings, lineNumber);	
 		// Pass lines the function setOpen needs to find open
 		lineNumber = setOpen(hand, handStrings, lineNumber);
-		// Set the winner
 		setWinner(hand, handStrings, lineNumber);		
 		return hand;
 	}
@@ -47,22 +46,17 @@ public class CashGameHandBuilder implements HandBuilder {
 		// get players positions and stack size
 		String line = handStrings.get(lineNumber++);
 		while (line.contains("Seat")) {
-			// get position
-			PositionEnum position = getPosition(line, 8, '(');			
-			// get stack size
+			PositionEnum position = getPosition(line, 8, '(');
 			double stackSize = getLastChipSize(line);
 			
 			players.add(new Player(stackSize, position));			
 			line = handStrings.get(lineNumber++);
 		}	
-		// Set the blinds
 		lineNumber = setBlinds(hand, handStrings, lineNumber);
 		// get each players' cards
 		line = handStrings.get(lineNumber);
 		while (line.contains("dealt")) { // capturing lines that look like "UTG : Card dealt to a spot [2s 6c]"
-			// get position where cards were dealt
 			PositionEnum position = getPosition(line, 0, ':');			
-			// get cards as a string array
 			int endOfCardsIndex = line.lastIndexOf(']');
 			int startOfCardsIndex = endOfCardsIndex - 5;
 			String[] cards = line.substring(startOfCardsIndex, endOfCardsIndex).split(" ");
@@ -70,7 +64,6 @@ public class CashGameHandBuilder implements HandBuilder {
 			// Loop through players to find the player with the correct position
 			for (Player player : players) {
 				if (position.equals(player.getPosition())) {
-					// found the player who should get the current cards
 					player.setHand(new Cards(cards));
 					break; // break on found
 				}
@@ -130,7 +123,7 @@ public class CashGameHandBuilder implements HandBuilder {
 		
 		String line = handStrings.get(lineNumber++);
 		while (! line.contains("FLOP")) { // While looking at pre-flop action			
-			if (line.contains("Calls")) {
+			if (line.contains("Calls")) { 
 				// a player opened with a limp
 				type = OpenTypeEnum.LIMP;
 				PositionEnum position = getPosition(line, 0, ':');
