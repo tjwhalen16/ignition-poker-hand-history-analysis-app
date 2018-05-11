@@ -26,7 +26,7 @@ public class CashGameHandBuilder implements HandBuilder {
 	private static final Logger logger = LoggerFactory.getLogger(CashGameHandBuilder.class);			
 	
 	@Override
-	public Hand build(String handString) {
+	public CashGameHand build(String handString) {
 		CashGameHand hand = new CashGameHand();		
 		List<String> handStrings = Utility.getHandLinesAsList(handString);
 		int lineNumber = 0;		
@@ -40,8 +40,7 @@ public class CashGameHandBuilder implements HandBuilder {
 		return hand;
 	}	
 
-	@Override
-	public int setOpen(Hand hand, List<String> handStrings, int lineNumber) {
+	public int setOpen(CashGameHand hand, List<String> handStrings, int lineNumber) {
 		Open open = null;
 		OpenTypeEnum type;
 		int numPlayers = hand.getNumberPlayers();
@@ -81,34 +80,7 @@ public class CashGameHandBuilder implements HandBuilder {
 		return lineNumber;
 	}
 
-	@Override
-	public int setBlinds(Hand hand, List<String> handStrings, int lineNumber) {
-		
-		double smallBlind = 0.0;
-		double bigBlind = 0.0;
-		
-		String line = handStrings.get(lineNumber++);
-		while (! line.contains("HOLE CARDS")) {
-			
-			if (line.contains("Small Blind")) {
-				smallBlind = getLastChipSize(line);
-			}
-			
-			if (line.contains("Big Blind")) {
-				bigBlind = getLastChipSize(line);
-			}
-			
-			line = handStrings.get(lineNumber++);
-		}
-		
-		Blinds blinds = new CashGameBlinds(smallBlind, bigBlind);
-		hand.setBlinds(blinds);
-		
-		return lineNumber;
-	}
-
-	@Override
-	public void setWinner(Hand hand, List<String> handStrings, int lineNumber) {
+	public void setWinner(CashGameHand hand, List<String> handStrings, int lineNumber) {
 		String line = handStrings.get(lineNumber++);
 		while (!line.contains("Hand result")) {
 			// Loop until line with winner is found
@@ -116,16 +88,5 @@ public class CashGameHandBuilder implements HandBuilder {
 		}
 		PositionEnum position = getPosition(line, 0, ':');
 		hand.setWinner(hand.getPlayerWithPosition(position));
-	}
-
-	@Override
-	public int setTime(Hand hand, List<String> handStrings, int lineNumber) {
-		String line = handStrings.get(lineNumber++);
-		int dateStartPosition = line.indexOf('-') + 2;
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Timestamp time = new Timestamp(dateFormat.parse(line, new ParsePosition(dateStartPosition)).getTime());
-		hand.setTime(time);
-		
-		return lineNumber;
 	}
 }

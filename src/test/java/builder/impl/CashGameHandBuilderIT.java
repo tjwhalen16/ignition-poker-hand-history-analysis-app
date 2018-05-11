@@ -17,6 +17,7 @@ import builder.HandBuilder;
 import service.impl.HandExtractorServiceImpl;
 import service.model.Blinds;
 import service.model.Hand;
+import service.model.impl.CashGameHand;
 import service.model.impl.Open;
 import service.model.impl.OpenTypeEnum;
 import service.model.impl.Player;
@@ -35,10 +36,10 @@ public class CashGameHandBuilderIT {
 			file = ResourceUtils.getFile(this.getClass().getResource("/HH20160930-224100 - 4754389 - RING - $0.02-$0.05 - HOLDEM - NL - TBL No.11049214.txt"));
 			HandExtractorServiceImpl handExtractor = new HandExtractorServiceImpl();
 			List<String> handStrings = handExtractor.getAllHandStringsFromFile(file);
-			HandBuilder builder = new CashGameHandBuilder();
+			CashGameHandBuilder builder = new CashGameHandBuilder();
 			List<Open> opens = handStrings.stream()
 					   .map(builder::build)
-					   .map(Hand::getOpen)
+					   .map(CashGameHand::getOpen)
 					   .collect(toList());
 			assertEquals("There should be 33 opens, I counted", 33, opens.size());			
 			opens.forEach(System.out::println);
@@ -114,7 +115,7 @@ public class CashGameHandBuilderIT {
 				"Seat+9: Big Blind $0.88 [Does not show]\n";
 			
 		CashGameHandBuilder builder = new CashGameHandBuilder();
-		Hand hand = builder.build(handString);
+		CashGameHand hand = builder.build(handString);
 		
 		// check timestamp
 		Calendar cal = Calendar.getInstance();
