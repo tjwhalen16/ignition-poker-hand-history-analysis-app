@@ -5,6 +5,10 @@ public class Allin {
 	private Board board;
 	private double size;
 	
+	public Allin() {
+		
+	}
+	
 	public Allin(Player player, Board board, double size) {
 		this.player = player;
 		this.board = board;
@@ -26,5 +30,17 @@ public class Allin {
 	
 	public double getSize() {
 		return size;
+	}
+	
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+	
+	public void setBoard(Board board) {
+		this.board = board;
+	}
+	
+	public void setSize(double size) {
+		this.size = size;
 	}
 }
