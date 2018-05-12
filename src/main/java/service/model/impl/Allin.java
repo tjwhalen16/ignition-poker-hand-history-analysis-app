@@ -11,6 +11,11 @@ public class Allin {
 		this.size = size;
 	}
 	
+	@Override
+	public String toString() {
+		return "Player at position " + player.getPosition() + " went all in with " + size + ". He was holding " + player.getHand().getCard1() + ", " + player.getHand().getCard2() + " on a board of: " + board;
+	}
+	
 	public HoleCards getHand() {
 		return player.getHand();
 	}
