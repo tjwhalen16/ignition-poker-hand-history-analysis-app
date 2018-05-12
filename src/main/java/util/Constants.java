@@ -14,4 +14,7 @@ public final class Constants {
 		linesToSkip.add("Seat re-join");
 	}
 
+	public final static String boardPatternString = "\\*\\*\\* .*]$";
+	public final static String allinPatternString = "(^.+) : [Aa]ll-in \\$([\\.\\d]+)\\s*";
+	public final static String cardPatternString = "(([2-9jJQKA]|10)[cCdDsShH])";
 }
