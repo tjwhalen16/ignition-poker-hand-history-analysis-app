@@ -187,7 +187,7 @@ public class AllinHandBuilderIT {
 		// Check size
 		assertEquals(1.66, allin.getSize(), 0.001);
 		// Check board
-		assertEquals("[7s As 9c 4h 5s]", allin.getBoard().toString());
+		assertEquals("7s As 9c 4h 5s", allin.getBoard().toString());
 	}	
 
 }
