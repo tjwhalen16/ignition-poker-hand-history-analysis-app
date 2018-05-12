@@ -9,6 +9,11 @@ public class Card {
 		suit = CardSuitEnum.fromString(cardString.substring(1));		
 	}
 	
+	@Override
+	public String toString() {
+		return face.toString() + suit.toString();
+	}
+	
 	public CardFaceEnum getFace() {
 		return face;
 	}

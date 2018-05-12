@@ -52,13 +52,20 @@ public class HoleCards {
 			} else { // The cards suits don't match
 				hand += "o";
 			}
-		}
-		
+		}		
 		return hand;
 	}
 	
 	@Override
 	public String toString() {
 		return hand;
+	}
+	
+	public Card getCard1() {
+		return card1;
+	}
+	
+	public Card getCard2() {
+		return card2;
 	}
 }
